@@ -5,23 +5,28 @@ from .serializers import ConversationSerializer, MessageSerializer, FeedbackSeri
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import viewsets
 from .models import Message, Conversation, Feedback
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, alogin, logout, get_user_model
-from django.contrib.auth.decorators import login_required# Create your views here.
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+
 
 class NaviagationViewSet(viewsets.ModelViewSet):
-    
+    @csrf_exempt
+    @api_view(["POST", ])
     def home(request):
-        return HttpResponse("You are home!")
+        print("reached here in home")
+        return Response(data="someone logged in")
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     @action(detail=False, methods=["post"])
-    def crate_user(self, request):
+    def create_user(self, request):
         email = request.data.get('email')
         # make sure ther
         first_name = request.data.get('first_name')

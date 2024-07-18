@@ -53,8 +53,3 @@ class Feedback(models.Model):
 
     def __str__(self):
         return self.feedback_text
-
-admin.site.register(Message)
-admin.site.register(User)
-admin.register(Conversation)
-admin.register(Feedback)
