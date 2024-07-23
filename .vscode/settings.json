@@ -1,5 +1,8 @@
 {
     "files.associations": {
         "*.css" : "tailwindcss"
-    }
+    },
+    "css.validate": true,
+    "stylelint.enable": false,
+    "scss.validate": false
 }
