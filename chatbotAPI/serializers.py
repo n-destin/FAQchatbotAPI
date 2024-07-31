@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
-        fields = '__all__'
+        fields = ('id', "conversation_name")
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:

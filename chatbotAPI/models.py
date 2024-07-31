@@ -3,17 +3,27 @@ from datetime import date
 from django.contrib.auth.models import User 
 from django.utils import timezone
 from django.contrib import admin
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here
 global max_length
 max_length  = 150
 
 
+class Message(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, default = '1')
+    content = models.TextField(default = "No content")
+    sender = models.CharField(max_length=200, default= "user")
+    date_created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.content
+
 class Conversation(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     conversation_name = models.CharField( max_length= max_length) # name the conversation after the first question
     date = models.DateField(default = timezone.now)
-    
+    messages = models.ManyToManyField(Message, blank=True)
     def __str__(self):
         return self.conversation_name
     
@@ -33,15 +43,6 @@ class Conversation(models.Model):
         pass
 
 
-class Message(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, default = '1')
-    conversation = models.ForeignKey(Conversation, on_delete = models.CASCADE, default = "1")
-    content = models.TextField(default = "No content")
-    date_created = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return self.content
-
 
 
 class Feedback(models.Model):
@@ -53,3 +54,4 @@ class Feedback(models.Model):
 
     def __str__(self):
         return self.feedback_text
+    
