@@ -12,7 +12,7 @@ const ChatRoom = ()=>{
     const api_url = "http://127.0.0.1:8000/"
     const dispatch = useDispatch()
     const conversations = useSelector((store) =>{
-        return store.conversationReducer.conversations
+        return store.conversation.conversations
     })
 
     const get_conversations = ()=>{
@@ -26,13 +26,13 @@ const ChatRoom = ()=>{
 
 
     const messages = useSelector((store)=>{
-        return store.conversationReducer.messages;
+        return store.conversation.messages;
     })
 
     const [currentConversationIndex, setCurrentConverstaionIndex] = useState(0)
     const [showNewConversation, setShowNewConversation] = useState(false)
     const conversationKey = useSelector((store)=>{
-        return store.conversationReducer.conversationKey
+        return store.conversation.conversationKey
     })
 
     const handleSelectConvesation = (conversationKey)=>{
@@ -54,7 +54,7 @@ const ChatRoom = ()=>{
     }
 
     return(
-        <div className="chatroom" style={{display:"flex", height:"100%", backgroundColor:"white", fontFamily : "monospace"}}>
+        <div className="chatroom" style={{display:"flex", height:"100%", backgroundColor:"white", fontFamily : "verdana, sans-serif", fontSize : "small"}}>
             {showNewConversation?(
             <NewConversation onCreate = {handleNewConversation}/>
         ) : (

@@ -52,7 +52,6 @@ export const action_types = {
  export function getConversations(){
     return (dispatch)=>{
         axios.get(`${ROOT_URL}/conversation/all`, {headers : {"Authorization" : `Token ${localStorage.getItem('token')}`}}).then((response)=>{
-
             dispatch({
                 type : action_types.UPDATE_CONVERSATIONS,
                 payload : response.data.conversations

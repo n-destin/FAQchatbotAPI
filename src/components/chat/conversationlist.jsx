@@ -17,7 +17,7 @@ const ConversationList = ({conversations, onSelect, onNew}) =>{
             style={{display:"flex", justifyContent:"space-between", alignItems : "center", marginBottom : "16px"}}>
                 <h2 className="text-sm font-bold" 
                 style={{fontSize:"1.125rem", fontWeight : "bold",}}>Conversations</h2>
-                <Button text={"New"} handleClick={onNew} width={""}/>
+                <Button text={"New"} handleClick={onNew} width={"100px"}/>
                 {/* <button 
                 onClick={onNew}
                 className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600" style={{
