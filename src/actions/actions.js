@@ -1,8 +1,7 @@
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
-
-const ROOT_URL = "http://127.0.0.1:8000/chatbot"
+const ROOT_URL = import.meta.env.VITE_API_URL
 const api_key = "?key=destin_niyomufasha"
 
 
