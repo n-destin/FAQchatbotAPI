@@ -1,52 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ConversationList from "./conversationlist";
 import NewConversation from "./newConverstaion";
 import ChatWindow from "./chatwindow";
+import axios from "axios";
+import { create_conversation, handleMessageSend, handleSelection, getConversations } from "../../actions/actions";
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 const ChatRoom = ()=>{
-    const[conversations, setConversations] = useState([{
-        "name" : "Sample conversation",
-        "key" :"sample_key",
-        "messages" : [{
-            "key" : "sample key",
-            "sender" : "user",
-            "text" : "sample text in conversation"
-        }]
-    }])
+    const api_url = "http://127.0.0.1:8000/"
+    const dispatch = useDispatch()
+    const conversations = useSelector((store) =>{
+        return store.conversationReducer.conversations
+    })
+
+    const get_conversations = ()=>{
+        const conversationsRetrieve = getConversations()
+        conversationsRetrieve(dispatch)
+    }
+
+    useEffect(()=>{
+        get_conversations()
+    }, [])
+
+
+    const messages = useSelector((store)=>{
+        return store.conversationReducer.messages;
+    })
 
     const [currentConversationIndex, setCurrentConverstaionIndex] = useState(0)
     const [showNewConversation, setShowNewConversation] = useState(false)
+    const conversationKey = useSelector((store)=>{
+        return store.conversationReducer.conversationKey
+    })
 
-    const handleSelectConvesation = (key)=>{
-        setCurrentConverstaionIndex(key)
+    const handleSelectConvesation = (conversationKey)=>{
+        const handleKeySelection = handleSelection(conversationKey)
+        handleKeySelection(dispatch)
     }
 
+    // the server should return another conversation
     const handleNewConversation = (name)=>{
-        setConversations([...conversations, {name : name, key : "sample key", messages:[]}])
+        const createConversation = create_conversation(name)
         setShowNewConversation(false)
+        createConversation(dispatch)
     }
 
-    const handleSendMessage = (text)=>{
-        const newConversations = [...conversations]
-        newConversations[currentConversationIndex].messages.push({
-            text,
-            sender: "user"
-        })
-        setConversations(newConversations)
+    const handleSendMessage = (message)=>{
+        console.log(conversationKey)
+        const handleMessage  = handleMessageSend(conversationKey, message)
+        handleMessage(dispatch)
     }
 
     return(
-        <div className="chatroom" style={{display:"flex", height:"100%", backgroundColor:"white"}}>
-            <ConversationList
-            conversations = {conversations}
-            onSelect={handleSelectConvesation}
-            onNew={()=>{setShowNewConversation(true)}}/>
+        <div className="chatroom" style={{display:"flex", height:"100%", backgroundColor:"white", fontFamily : "monospace"}}>
             {showNewConversation?(
             <NewConversation onCreate = {handleNewConversation}/>
         ) : (
-        <ChatWindow messages = {conversations[0].messages}
-        onSend = {handleSendMessage}/>
+            <div style={{
+                margin : "0",
+                display : "flex",
+                flexDirection : "row",
+                width : '100%'
+            }}>
+                <ConversationList
+                conversations = {conversations}
+                onSelect={handleSelectConvesation}
+                onNew={()=>{setShowNewConversation(true)}}/>
+                <ChatWindow messages = {messages}
+            onSend = {handleSendMessage}/>
+            </div>
         )}
         </div>
     )

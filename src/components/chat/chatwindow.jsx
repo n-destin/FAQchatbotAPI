@@ -1,36 +1,39 @@
 import React, { useState } from "react";
 
-const ChatWindow = ({messages, ondSend}) => {
+const ChatWindow = ({messages, onSend}) => {
     const [input, setInput] = useState("")
     const handleSend = ()=>{
         if(input.trim() !== " "){
-            ondSend(input)
+            onSend(input)
             setInput("")
         }
     }
     return(
         <div className="w-3/4  flex flex-col h-full p-4 bg-gray-100"
-        style={{width : "75%", display : "flex", flexDirection :'column', height  : '99%', padding : '5px', backgroundColor : '#f3f4f6' }}>
+        style={{width : "100%", display : "flex", flexDirection :'column', height  : '99%', padding : '5px', backgroundColor : '#f3f4f6' }}>
             <div className="flex-grow overflow-auto bg-white p-4 rounded-sm" style={{
                 flexGrow : 1, 
                 overflowY : 'auto',
                 backgroundColor : 'white',
                 padding : '16px',
                 borderRadius : '4px',
-                boxShadow : '0 1px 3px rgba(0,0,0, 0.1)'
-            }}>
-                {messages.map((message, index)=>{
-                    <div key={message.key} style={{
+                boxShadow : '0 1px 3px rgba(0,0,0, 0.1)',
+                display : "flex",
+                flexDirection : "column"
+            }}> {messages.map((message)=>{
+                    console.log(message.sender);
+                    return(<div key={message.key} style={{
                         marginBottom : '16px',
-                        padding : '8px',
-                        borderRadius : '4px',
+                        padding : '10px 20px',
+                        borderRadius : '20px',
                         maxWidth : '50%',
-                        backgroundColor : message.sender == "user "  ? "#3b82f6" : '#e5e7eb',
-                        color : message.sender == "user" ? 'white' : 'black',
-                        alignSelf : message.sender == "user" ? 'flex-end' : 'flex-start'
+                        wordWrap : "break-word",
+                        backgroundColor : message.sender == "user"  ? '#0b93f6' : "#455d7a",
+                        color : 'white',
+                        alignSelf : message.sender === "user" ? "flex-end"  : "flex-start",
                     }} className={`mb-4 p-2 rounded-md max-w-xs ${message.sender === 'user' ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 self-start'}`}>
-                        {message.text}
-                    </div>
+                        {message.content}
+                    </div>)
                 })}
             </div>
             <div className="flex mt-4">
@@ -49,7 +52,7 @@ const ChatWindow = ({messages, ondSend}) => {
                 value = {input}
                 onChange={(event)=>{setInput(event.target.value)}} 
                 onKeyDown={(event)=>{event.key == "Enter" && handleSend()}}/>
-                <button onClick={handleSend}
+                <button onClick={()=>{handleSend()}}
                 style={{
                     height : '2.2rem',
                     width : '3.5rem',

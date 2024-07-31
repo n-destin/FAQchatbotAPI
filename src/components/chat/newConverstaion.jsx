@@ -17,13 +17,19 @@ const NewConversation = ({onCreate}) =>{
             height : "30%",
             padding : "16px",
             borderRadius :"4px",
-            margin : "10%"
+            marginLeft : "35%",
+            marginTop : "15%",
+            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+            justifyContent : "center",
+            fontFamily : "monospace"
+
         }}>
             <h2 className="text-lg fond-bold mb-4"
             style={{
                 fontSize : "1.125rem",
                 fontWeight : "bold",
                 marginBottom : "16px",
+                textAlign : "center"
             }}> New Conversation</h2>
             <input type="text" 
             className="w-full p-2 border rounded-md mb-4 focus:outline-none focus: ring  focus:border-blue-300"
@@ -41,13 +47,14 @@ const NewConversation = ({onCreate}) =>{
             <button className="w-full bg-blue-500 text-white py-2 roundd-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 "
             onClick={handleCreate}
             style={{
-                width : "100%",
+                width : "30%",
                 border : "none",
                 backgroundColor : "#3b82f6",
                 color :"white",
                 padding : "8px 16px",
                 borderRadius : "4px",
-                cursor : "pointer"
+                cursor : "pointer",
+                alignSelf : "center"
             }}>
                 Create
             </button>

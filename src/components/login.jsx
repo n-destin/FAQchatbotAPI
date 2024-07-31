@@ -2,31 +2,35 @@ import axios from "axios";
 // import dotenv from "dotenv"
 import React, { useState } from "react";
 const base_url = "http://127.0.0.1:8000/chatbot/"
+import Button from "./LittleCompoenents/button";
+import Input from "./LittleCompoenents/input";
+import { authenticate_user } from "../actions/actions";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { create_user } from "../actions/actions";
 // dotenv.config({silent : true}) // call only when needed
 
 const Login = () =>{
 
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
     // This has login and crate account
     
     const [email, setEmail] = useState("")
+    const[password, setPassword] = useState("")
     const[rendered, setRendered] = useState("Register")
     const[renderLogin, setRenderLogin] = useState(true)
     const [first_name, setFirstName] = useState("")
     const[last_name, setLastName] = useState("")
-    const[username,  setUsername] = useState("")
 
     function authentication_request(event, type){
-        if(type == "Login"){
-            let request_url = base_url + "authenticate/login"
-            axios.post(request_url, {email: email}).then((response)=>{
-                localStorage.setItem({token : token})
-            })
+        if (type == "Login"){
+            const authenticate = authenticate_user(email, password, navigate)
+            authenticate(dispatch)
         }else{
-            axios.post(base_url + "authenticate/register", {email:email, first_name: first_name, last_name:last_name, user_name : username}).then((response)=>{
-                console.log(response)
-            }).then((response)=>{
-
-            })
+            const authenticate = create_user(first_name, last_name, email, password, navigate)
+            authenticate(dispatch)
         }
     }
 
@@ -42,6 +46,10 @@ const Login = () =>{
     function handleEmail(event){
         setEmail(event.target.value)
     }
+
+    function handlePassword(event){
+        setPassword(event.target.value)
+    }
     
 
     const changeRender = () =>{
@@ -49,29 +57,66 @@ const Login = () =>{
         setRenderLogin(!renderLogin)
     }
 
-    function handleUsername(event){
-        setUsername(event.target.value);
-    }
-
     return (
-        <div>
-                <div>
+        <div style={{
+            width : "50%",
+            height : "70%",
+            margin : "0em auto",
+            borderRadius : ".5em",
+            boxShadow: "rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px", 
+            backgroundColor : "#e2e8f0",
+            position : "relative",
+            fontFamily : "monospace",
+            top : "15%"
+        }}>
+                <div style={{
+                    display : "flex",
+                    flexDirection :"column",
+                    justifyContent : "center",
+                }}>
                     {renderLogin? (
-                        <div>
-                            <input type="text" value={email} onChange={handleEmail} />
-                            <button onClick={(event) => {authentication_request(event, "Login")}}>Login</button>
+                        <div style={{
+                            margin : "7rem auto", 
+                            marginBottom : "1em",
+                            display : "flex",
+                        }}>
+                            {/* <Input width="28rem" handleChange={handleEmail} placeholder= "PPG email address" margin = "0"/> */}
                         </div>
                     ) : (
-                        <div>
-                            <input type="text" onChange={handleFirstName} />
-                            <input type="text" onChange={handleLastName} />
-                            <input type="text" onChange={handleEmail} />
-                            <input type="text" onChange={handleUsername} />
-                            <button onClick={(event)=>{authentication_request(event, "register")}}>Register</button>
+                        <div style={{
+                            display : "flex",
+                            flexDirection : "column", 
+                            margin : "8em auto",
+                            marginBottom : "0px"
+                        }}>
+                            <div style={{
+                                display : "flex",
+                                flexDirection : "row",
+                                justifyContent : "center"
+                            }}>
+                                <Input handleChange={handleFirstName} width="35%" margin = "20px" placeholder= "First name"/>
+                                <Input handleChange={handleLastName} width= "35%" margin = "20px" placeholder= "Last name"/>
+                            </div>
                         </div>
                     )}
+                <Input handleChange={handleEmail} width= "76%" margin= "0 auto" placeholder= "PPG Email address"/>
+                <Input handleChange={handlePassword} width= "76%" margin= "0 auto" placeholder= "Password"/>
+                <Button text = {(rendered == "Login" ? "Register" : "Login")} handleClick={(event)=>{authentication_request(event, (rendered == "Login")? "Register" : "Login")}} width= "130px" margin = "35px auto"/>
                 </div>
-                <button onClick={changeRender}>{rendered}</button>
+                <div style={{
+                    display : "flex",
+                    flexDirection : "row",
+                    position : "absolute",
+                    bottom : "5%",
+                    justifyContent : "center",
+                    marginRight : "auto",
+                    marginLeft : "auto",
+                    right  : 0,
+                    left : 0
+                }}>
+                    <p>{(rendered == "Login") ? "If you have an account already" : "If you don't have an account yet"}</p>
+                    <Button text = {rendered} handleClick ={changeRender} width = "130px" height= "10%" margin= "8px"/>
+                </div>
         </div>
     );
 }
