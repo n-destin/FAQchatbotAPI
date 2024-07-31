@@ -14,6 +14,7 @@ model_config = AzureOpenAIModelConfiguration(
 prompty = Prompty.load("./generation/chat.prompty", model={'configuration': model_config})
 
 
+
 def generate(prompt, chat_history):
     result = prompty(
     chat_history = chat_history,
