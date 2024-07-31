@@ -180,6 +180,7 @@ class conversationViewSet(APIView):
                 QUESTION:
                 {request.data["content"]}
                 INSTRUCTIONS:
+                You are an assistant and you help people find information.
                 Answer the users QUESTION using the Questions and answer pairs in the DOCUMENT text above.
                 Keep your answer ground in the facts of the DOCUMENT.
         '''
