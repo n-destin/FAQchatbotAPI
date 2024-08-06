@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     'rest_framework_simplejwt',
     'chatbotAPI.apps.ChatbotapiConfig',
-    'djongo',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
