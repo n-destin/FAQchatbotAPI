@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import viewsets
 from .models import Message, Conversation, Feedback
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, alogin, logout, get_user_model
+from django.contrib.auth import authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
