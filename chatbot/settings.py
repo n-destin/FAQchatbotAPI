@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-im%6utr-e0bj9-do!0q*)*gy#lqj5lv$3l#su%3a=i&4v=d1u)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["https://salesteamchatbot-dcbqhsb0hqctg2et.eastus-01.azurewebsites.net/"]
 
 # settings.py
 
