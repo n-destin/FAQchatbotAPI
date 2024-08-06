@@ -37,7 +37,6 @@ def get_messages(messageIds):
 
 
 # class customeBackend(ModelBackend):
-    
 #     def authenticate(self, request: HttpRequest, username: str | None = ..., password: str | None = ..., **kwargs: json.Any) -> AbstractBaseUser | None:
 #         return super().authenticate(request, username, password, **kwargs)
 
