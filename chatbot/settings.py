@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import djongo
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +26,7 @@ SECRET_KEY = 'django-insecure-im%6utr-e0bj9-do!0q*)*gy#lqj5lv$3l#su%3a=i&4v=d1u)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["https://salesteamchatbot-dcbqhsb0hqctg2et.eastus-01.azurewebsites.net/"]
 
 # settings.py
 
@@ -44,14 +43,12 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     'rest_framework_simplejwt',
     'chatbotAPI.apps.ChatbotapiConfig',
-    'djongo',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
     'corsheaders'
 ]
 

@@ -22,6 +22,7 @@ from rest_framework.decorators import permission_classes
 import json
 import re
 from django.contrib.auth.backends import ModelBackend
+from generation.responseformatting import process_response
 from generation.azure_configuration import generate
 from .PasswordGenerator import generate_password
 from generation.embeddings_generation import generate_reference_documents
@@ -36,7 +37,6 @@ def get_messages(messageIds):
 
 
 # class customeBackend(ModelBackend):
-    
 #     def authenticate(self, request: HttpRequest, username: str | None = ..., password: str | None = ..., **kwargs: json.Any) -> AbstractBaseUser | None:
 #         return super().authenticate(request, username, password, **kwargs)
 
@@ -45,7 +45,7 @@ class NaviagationViewSet(viewsets.ModelViewSet):
     @csrf_exempt
     @api_view(["POST", ])
     def home(request):
-        print("reached here in home")
+
         return Response(data="someone logged in")
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -63,10 +63,11 @@ class UserViewSet(viewsets.ModelViewSet):
         print(data)
         user = authenticate(username = data['email'], password = data['password'])
         if user:
+            print('creating token to return')
             token, created = Token.objects.get_or_create(user = user)
-            print(token, created)
             return Response(data={"userToken" : token.key}, status=status.HTTP_200_OK)
         else:
+            print('there is no such user')
             return Response(status = status.HTTP_400_BAD_REQUEST, data = {"message" : ""})
     
         # @action(detail=False, methods=["post"])
@@ -80,9 +81,10 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(response = False, status=status.HTTP_400_BAD_REQUEST)
         password = generate_password(password_length)
         # send an email to the user to give them the password
-        user = User.objects.create_user(first_name = data["first_name"], last_name = data['last_name'], email = data['email'], username = data["email"], password=password)
+        user = User.objects.create_user(first_name = data["first_name"], last_name = data['last_name'], email = data['email'], username = data["email"], password=data['password'])
         if user != None:
-            return Response(data = True, status=status.HTTP_200_OK)
+            token, created = Token.objects.get_or_create(user = user)
+            return Response(data = {'userToken': token.key}, status=status.HTTP_200_OK)
         else:
             return Response(data= False, status = status.HTTP_102_PROCESSING)
 
@@ -164,14 +166,12 @@ class conversationViewSet(APIView):
     @api_view(("POST",))
     @permission_classes([IsAuthenticated])
     def handle_new_message(request):
-        print(request.data["conversation_key"])
         conversation = Conversation.objects.get(id = request.data["conversation_key"], owner = request.user)
         if conversation == None:
             return Response(status=status.HTTP_400_BAD_REQUEST, data="Conversation not found")
         messages = []
         for message in conversation.messages.all():
             if message != None:
-                print(message)
                 messages.append(Message.objects.get(id = message.id).content)
         reference_documents = generate_reference_documents(request.data["content"])
         prompt = f''''
@@ -182,9 +182,11 @@ class conversationViewSet(APIView):
                 INSTRUCTIONS:
                 You are an assistant and you help people find information.
                 Answer the users QUESTION using the Questions and answer pairs in the DOCUMENT text above.
-                Keep your answer ground in the facts of the DOCUMENT.
+                Keep your answer ground in the facts of the DOCUMENT. 
+                Make sure the response has string format identifiers such as '\n' , among others.
         '''
         result = generate(prompt, messages)
+        processed = process_response(result)
         new_message = Message.objects.create(content = request.data["content"], owner = request.user, sender = "user")
         response_message = Message.objects.create(content = result, owner = request.user, sender = "Assistant")
         if response_message:
